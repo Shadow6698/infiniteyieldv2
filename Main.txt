@@ -1,0 +1,373 @@
+-- Script GUI Mobile para Infinite Yield
+-- Execute este script no seu executor de Roblox
+
+-- Carrega o Infinite Yield
+loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+
+wait(2) -- Aguarda o IY carregar
+
+-- Cria a GUI Mobile
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Cria ScreenGui principal
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "InfiniteYieldMobile"
+screenGui.Parent = playerGui
+screenGui.ResetOnSpawn = false
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Frame principal (movível)
+local mainFrame = Instance.new("Frame")
+mainFrame.Name = "MainFrame"
+mainFrame.Parent = screenGui
+mainFrame.Size = UDim2.new(0, 350, 0, 550)
+mainFrame.Position = UDim2.new(0, 20, 0, 50)
+mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+mainFrame.BorderSizePixel = 0
+mainFrame.Active = true
+mainFrame.Draggable = true
+
+-- Adiciona cantos arredondados
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 12)
+corner.Parent = mainFrame
+
+-- Removido sombra para evitar obscurecer a tela
+
+-- Header
+local header = Instance.new("Frame")
+header.Name = "Header"
+header.Parent = mainFrame
+header.Size = UDim2.new(1, 0, 0, 50)
+header.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+header.BorderSizePixel = 0
+
+local headerCorner = Instance.new("UICorner")
+headerCorner.CornerRadius = UDim.new(0, 12)
+headerCorner.Parent = header
+
+-- Fix cantos do header
+local headerFix = Instance.new("Frame")
+headerFix.Parent = header
+headerFix.Size = UDim2.new(1, 0, 0, 12)
+headerFix.Position = UDim2.new(0, 0, 1, -12)
+headerFix.BackgroundColor3 = Color3.fromRGB(35, 35, 50)
+headerFix.BorderSizePixel = 0
+
+-- Título
+local title = Instance.new("TextLabel")
+title.Name = "Title"
+title.Parent = header
+title.Size = UDim2.new(1, -100, 1, 0)
+title.Position = UDim2.new(0, 15, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "📱 Infinite Yield Mobile"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.TextScaled = true
+title.Font = Enum.Font.GothamBold
+
+-- Botão de minimizar
+local minimizeBtn = Instance.new("TextButton")
+minimizeBtn.Name = "MinimizeBtn"
+minimizeBtn.Parent = header
+minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+minimizeBtn.Position = UDim2.new(1, -70, 0, 10)
+minimizeBtn.BackgroundColor3 = Color3.fromRGB(255, 193, 7)
+minimizeBtn.Text = "─"
+minimizeBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+minimizeBtn.TextScaled = true
+minimizeBtn.Font = Enum.Font.GothamBold
+
+local minCorner = Instance.new("UICorner")
+minCorner.CornerRadius = UDim.new(0, 8)
+minCorner.Parent = minimizeBtn
+
+-- Botão de fechar
+local closeBtn = Instance.new("TextButton")
+closeBtn.Name = "CloseBtn"
+closeBtn.Parent = header
+closeBtn.Size = UDim2.new(0, 30, 0, 30)
+closeBtn.Position = UDim2.new(1, -35, 0, 10)
+closeBtn.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
+closeBtn.Text = "✕"
+closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeBtn.TextScaled = true
+closeBtn.Font = Enum.Font.GothamBold
+
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 8)
+closeCorner.Parent = closeBtn
+
+-- Área de conteúdo
+local content = Instance.new("ScrollingFrame")
+content.Name = "Content"
+content.Parent = mainFrame
+content.Size = UDim2.new(1, -20, 1, -70)
+content.Position = UDim2.new(0, 10, 0, 60)
+content.BackgroundTransparency = 1
+content.ScrollBarThickness = 8
+content.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 120)
+
+-- Lista de comandos
+local commandsList = Instance.new("UIListLayout")
+commandsList.Parent = content
+commandsList.Padding = UDim.new(0, 5)
+commandsList.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- Função para criar seção
+local function createSection(title, color)
+    local section = Instance.new("Frame")
+    section.Name = title .. "Section"
+    section.Parent = content
+    section.Size = UDim2.new(1, -10, 0, 35)
+    section.BackgroundColor3 = color
+    section.BorderSizePixel = 0
+    
+    local sectionCorner = Instance.new("UICorner")
+    sectionCorner.CornerRadius = UDim.new(0, 8)
+    sectionCorner.Parent = section
+    
+    local sectionLabel = Instance.new("TextLabel")
+    sectionLabel.Parent = section
+    sectionLabel.Size = UDim2.new(1, -10, 1, 0)
+    sectionLabel.Position = UDim2.new(0, 5, 0, 0)
+    sectionLabel.BackgroundTransparency = 1
+    sectionLabel.Text = title
+    sectionLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    sectionLabel.TextScaled = true
+    sectionLabel.Font = Enum.Font.GothamBold
+    sectionLabel.TextXAlignment = Enum.TextXAlignment.Left
+    
+    return section
+end
+
+-- Função para criar comando
+local function createCommand(commandText, description, example)
+    local commandFrame = Instance.new("Frame")
+    commandFrame.Parent = content
+    commandFrame.Size = UDim2.new(1, -10, 0, 70)
+    commandFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 55)
+    commandFrame.BorderSizePixel = 0
+    
+    local cmdCorner = Instance.new("UICorner")
+    cmdCorner.CornerRadius = UDim.new(0, 8)
+    cmdCorner.Parent = commandFrame
+    
+    local cmdTitle = Instance.new("TextLabel")
+    cmdTitle.Parent = commandFrame
+    cmdTitle.Size = UDim2.new(1, -10, 0, 25)
+    cmdTitle.Position = UDim2.new(0, 5, 0, 5)
+    cmdTitle.BackgroundTransparency = 1
+    cmdTitle.Text = "🔹 " .. commandText
+    cmdTitle.TextColor3 = Color3.fromRGB(100, 200, 255)
+    cmdTitle.TextScaled = true
+    cmdTitle.Font = Enum.Font.GothamSemibold
+    cmdTitle.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local cmdDesc = Instance.new("TextLabel")
+    cmdDesc.Parent = commandFrame
+    cmdDesc.Size = UDim2.new(1, -10, 0, 20)
+    cmdDesc.Position = UDim2.new(0, 5, 0, 25)
+    cmdDesc.BackgroundTransparency = 1
+    cmdDesc.Text = description
+    cmdDesc.TextColor3 = Color3.fromRGB(200, 200, 200)
+    cmdDesc.TextScaled = true
+    cmdDesc.Font = Enum.Font.Gotham
+    cmdDesc.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local cmdExample = Instance.new("TextLabel")
+    cmdExample.Parent = commandFrame
+    cmdExample.Size = UDim2.new(1, -10, 0, 15)
+    cmdExample.Position = UDim2.new(0, 5, 0, 45)
+    cmdExample.BackgroundTransparency = 1
+    cmdExample.Text = "Exemplo: " .. example
+    cmdExample.TextColor3 = Color3.fromRGB(150, 150, 150)
+    cmdExample.TextScaled = true
+    cmdExample.Font = Enum.Font.GothamBold
+    cmdExample.TextXAlignment = Enum.TextXAlignment.Left
+    
+    return commandFrame
+end
+
+-- Instrução inicial
+createSection("📋 COMO USAR", Color3.fromRGB(52, 152, 219))
+
+local instruction = Instance.new("TextLabel")
+instruction.Parent = content
+instruction.Size = UDim2.new(1, -10, 0, 40)
+instruction.BackgroundColor3 = Color3.fromRGB(46, 125, 50)
+instruction.BorderSizePixel = 0
+instruction.Text = "1º PASSO: Clique em 'Command Bar' no Infinite Yield\n2º PASSO: Digite os comandos abaixo"
+instruction.TextColor3 = Color3.fromRGB(255, 255, 255)
+instruction.TextScaled = true
+instruction.Font = Enum.Font.GothamBold
+
+local instrCorner = Instance.new("UICorner")
+instrCorner.CornerRadius = UDim.new(0, 8)
+instrCorner.Parent = instruction
+
+-- Seção de movimento
+createSection("🚀 COMANDOS DE MOVIMENTO", Color3.fromRGB(155, 89, 182))
+
+createCommand("fly / unfly", "Ativa/desativa o modo voar", "fly 50")
+createCommand("view [player]", "Vê através dos olhos do jogador", "view João123")
+createCommand("unview", "Para de ver através dos olhos", "unview")
+createCommand("vfly / unvfly", "Modo voar para veículos", "vfly 100")
+createCommand("noclip / clip", "Atravessa paredes / Para noclip", "noclip")
+createCommand("sit / unsit", "Senta/levanta o personagem", "sit")
+createCommand("speed [número]", "Altera velocidade de caminhada", "speed 50")
+createCommand("ws [número]", "Atalho para speed (walkspeed)", "ws 50")
+
+createCommand("jumppower [número]", "Altera força do pulo", "jumppower 100")
+createCommand("jp [número]", "Atalho para jumppower", "jp 100")
+-- Seção de teleporte
+
+createSection("📍 COMANDOS DE TELEPORTE", Color3.fromRGB(230, 126, 34))
+
+createCommand("to [player]", "Teleporta até um jogador", "to João123")
+createCommand("goto [player]", "Atalho para 'to' - teleporta", "goto João123")
+createCommand("loopgoto [player]", "Loop de teleporte para jogador", "loopgoto João123")
+createCommand("unloopgoto", "Para o loop de teleporte", "unloopgoto")
+createCommand("bring [player]", "Traz jogador até você", "bring João123")
+createCommand("spawn", "Teleporta para o spawn", "spawn")
+
+-- Seção de trollagem
+createSection("😈 COMANDOS DE TROLLAGEM", Color3.fromRGB(231, 76, 60))
+
+createCommand("bang [player]", "Faz animação engraçada no player", "bang João123")
+createCommand("unbang", "Para a animação", "unbang")
+createCommand("spin [player]", "Faz o jogador girar", "spin João123")
+createCommand("unspin", "Para o giro", "unspin")
+
+-- Seção de utilidades
+createSection("🛠️ COMANDOS ÚTEIS", Color3.fromRGB(52, 73, 94))
+
+createCommand("kill [player/me]", "Mata jogador ou você mesmo", "kill me")
+createCommand("respawn", "Respawna seu personagem", "respawn")
+createCommand("invisible / visible", "Fica invisível/visível", "invisible")
+createCommand("god / ungod", "Modo deus on/off", "god")
+createCommand("reset", "Reseta seu personagem", "reset")
+
+-- Botão para abrir Command Bar
+local openCmdBtn = Instance.new("TextButton")
+openCmdBtn.Name = "OpenCmdBtn"
+openCmdBtn.Parent = content
+openCmdBtn.Size = UDim2.new(1, -10, 0, 50)
+openCmdBtn.BackgroundColor3 = Color3.fromRGB(40, 167, 69)
+openCmdBtn.Text = "🎮 ABRIR COMMAND BAR"
+openCmdBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+openCmdBtn.TextScaled = true
+openCmdBtn.Font = Enum.Font.GothamBold
+
+local openBtnCorner = Instance.new("UICorner")
+openBtnCorner.CornerRadius = UDim.new(0, 10)
+openBtnCorner.Parent = openCmdBtn
+
+-- Atualiza tamanho do conteúdo
+content.CanvasSize = UDim2.new(0, 0, 0, commandsList.AbsoluteContentSize.Y + 20)
+
+-- Conecta o layout para atualizar automaticamente
+commandsList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    content.CanvasSize = UDim2.new(0, 0, 0, commandsList.AbsoluteContentSize.Y + 20)
+end)
+
+-- Funcionalidades dos botões
+local isMinimized = false
+
+minimizeBtn.MouseButton1Click:Connect(function()
+    isMinimized = not isMinimized
+    local targetSize = isMinimized and UDim2.new(0, 350, 0, 50) or UDim2.new(0, 350, 0, 550)
+    
+    local tween = TweenService:Create(mainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {Size = targetSize})
+    tween:Play()
+    
+    minimizeBtn.Text = isMinimized and "□" or "─"
+    content.Visible = not isMinimized
+end)
+
+closeBtn.MouseButton1Click:Connect(function()
+    local tween = TweenService:Create(mainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back), {
+        Size = UDim2.new(0, 0, 0, 0),
+        Position = UDim2.new(0.5, 0, 0.5, 0)
+    })
+    tween:Play()
+    
+    tween.Completed:Wait()
+    screenGui:Destroy()
+end)
+
+openCmdBtn.MouseButton1Click:Connect(function()
+    -- Tenta abrir o Command Bar do Infinite Yield
+    if game:GetService("CoreGui"):FindFirstChild("InfiniteYield") then
+        local iy = game:GetService("CoreGui").InfiniteYield
+        if iy:FindFirstChild("Frame") and iy.Frame:FindFirstChild("cmdbar") then
+            iy.Frame.cmdbar.Visible = true
+            iy.Frame.cmdbar:CaptureFocus()
+        end
+    end
+end)
+
+-- Efeito de hover nos botões
+local function addHoverEffect(button, hoverColor, originalColor)
+    button.MouseEnter:Connect(function()
+        local tween = TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = hoverColor})
+        tween:Play()
+    end)
+    
+    button.MouseLeave:Connect(function()
+        local tween = TweenService:Create(button, TweenInfo.new(0.2), {BackgroundColor3 = originalColor})
+        tween:Play()
+    end)
+end
+
+addHoverEffect(minimizeBtn, Color3.fromRGB(255, 215, 0), Color3.fromRGB(255, 193, 7))
+addHoverEffect(closeBtn, Color3.fromRGB(255, 69, 58), Color3.fromRGB(220, 53, 69))
+addHoverEffect(openCmdBtn, Color3.fromRGB(46, 189, 79), Color3.fromRGB(40, 167, 69))
+
+-- Notificação de carregamento
+local notification = Instance.new("Frame")
+notification.Name = "Notification"
+notification.Parent = screenGui
+notification.Size = UDim2.new(0, 300, 0, 80)
+notification.Position = UDim2.new(0.5, -150, 0, -100)
+notification.BackgroundColor3 = Color3.fromRGB(46, 125, 50)
+notification.BorderSizePixel = 0
+
+local notifCorner = Instance.new("UICorner")
+notifCorner.CornerRadius = UDim.new(0, 12)
+notifCorner.Parent = notification
+
+local notifText = Instance.new("TextLabel")
+notifText.Parent = notification
+notifText.Size = UDim2.new(1, -20, 1, 0)
+notifText.Position = UDim2.new(0, 10, 0, 0)
+notifText.BackgroundTransparency = 1
+notifText.Text = "✅ GUI Mobile Carregada!\nInfinite Yield está pronto!"
+notifText.TextColor3 = Color3.fromRGB(255, 255, 255)
+notifText.TextScaled = true
+notifText.Font = Enum.Font.GothamBold
+
+-- Anima a notificação
+local notifTween = TweenService:Create(notification, TweenInfo.new(0.5, Enum.EasingStyle.Back), {
+    Position = UDim2.new(0.5, -150, 0, 20)
+})
+notifTween:Play()
+
+-- Remove notificação após 3 segundos
+wait(3)
+local hideTween = TweenService:Create(notification, TweenInfo.new(0.5, Enum.EasingStyle.Back), {
+    Position = UDim2.new(0.5, -150, 0, -100)
+})
+hideTween:Play()
+
+hideTween.Completed:Connect(function()
+    notification:Destroy()
+end)
+
+print("✅ GUI Mobile do Infinite Yield carregada com sucesso!")
+print("📱 Use a interface para ver todos os comandos disponíveis.")
