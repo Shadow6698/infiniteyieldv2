@@ -233,8 +233,7 @@ createCommand("to [player]", "Teleporta até um jogador", "to João123")
 createCommand("goto [player]", "Atalho para 'to' - teleporta", "goto João123")
 createCommand("loopgoto [player]", "Loop de teleporte para jogador", "loopgoto João123")
 createCommand("unloopgoto", "Para o loop de teleporte", "unloopgoto")
-createCommand("bring [player]", "Traz jogador até você", "bring João123")
-createCommand("spawn", "Teleporta para o spawn", "spawn")
+createCommand("rj", "Reloga do servidor atual", "rj")
 
 -- Seção de trollagem
 createSection("😈 COMANDOS DE TROLLAGEM", Color3.fromRGB(231, 76, 60))
@@ -243,14 +242,11 @@ createCommand("bang [player]", "Faz animação engraçada no player", "bang Joã
 createCommand("unbang", "Para a animação", "unbang")
 createCommand("spin [player]", "Faz o jogador girar", "spin João123")
 createCommand("unspin", "Para o giro", "unspin")
+createCommand("headsit [player]", "Senta na cabeça do jogador", "headsit João123")
 
 -- Seção de utilidades
 createSection("🛠️ COMANDOS ÚTEIS", Color3.fromRGB(52, 73, 94))
 
-createCommand("kill [player/me]", "Mata jogador ou você mesmo", "kill me")
-createCommand("respawn", "Respawna seu personagem", "respawn")
-createCommand("invisible / visible", "Fica invisível/visível", "invisible")
-createCommand("god / ungod", "Modo deus on/off", "god")
 createCommand("reset", "Reseta seu personagem", "reset")
 
 -- Botão para abrir Command Bar
